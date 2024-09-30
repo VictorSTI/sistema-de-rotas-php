@@ -1,0 +1,14 @@
+# Não permite a listagem de pastas/arquivos no navegador
+Options -Indexes
+
+# Habilita a reescrita de regras
+RewriteEngine On
+
+# Se a url estiver vazia, redireciona para public
+RewriteRule ^$ public_html/index.php [L,QSA]
+
+# Se a houver uri, redireciona para public passando a uri por parâmetro
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^(.*)$ public_html/index.php?url=$1 [L,QSA]
+RewriteRule ^(.*)$ public_html/index.php [L,QSA]
