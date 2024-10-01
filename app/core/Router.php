@@ -7,8 +7,40 @@ class Router
     private $uri;
     private $route;
     private $requestMethod;
-    private $routeData;
-    private $paramethers;
+    private $controller;
+    private $method;
+    private $parameters = [];
+    private $flag;
+
+    public function getUri()
+    {
+        return $this->uri;
+    }
+    
+    public function getRoute()
+    {
+        return $this->route;
+    }
+    
+    public function getRequestMethod()
+    {
+        return $this->requestMethod;
+    }
+    
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
+    }
+    
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
 
     public function __construct()
     {
@@ -26,32 +58,26 @@ class Router
         {
             case '/':
                 $this->route = $this->uri;
-                $this->routeData = $this->checkRoute();
+                $this->flag = $this->checkRoute();
             break;
 
             default:
                 if(preg_match(REGEX_ROUTE,$this->uri,$match))
                 {
                     $this->route = $match[0];
-                    $this->routeData = $this->checkRoute();
+                    $this->flag = $this->checkRoute();
                 }
                 else
                 {
-                    $this->routeData = false;
+                    $this->flag = false;
                 }
             break;
         }
 
-        // Separa os dados da rota em um array, caso a rota seja válida.
-        if($this->routeData != null)
+        // Se a rota é válida (true), verifica se existem parâmetros.
+        if($this->flag === true)
         {
-            list($controller,$method,$pageName) = explode('@',$this->routeData);
-            $this->routeData = [
-                'controller' => $controller . 'Controller',
-                'method' => $method,
-                'pageName' => $pageName
-            ];
-            $this->uri = preg_replace(REGEX_ROUTE,'',$this->uri);
+            unset($this->flag);
             $this->checkParams();
         }
         else
@@ -62,27 +88,34 @@ class Router
         }
     }
 
-    /** Verifica se a rota existe no array de rotas. */
+    /** Verifica se a rota existe no array de rotas.
+     * Define controller e method. */
     public function checkRoute()
     {
         if(array_key_exists($this->route,ROUTES[$this->requestMethod]))
         {
-            return ROUTES[$this->requestMethod][$this->route];
+            $array = explode('@',ROUTES[$this->requestMethod][$this->route]);
+            $this->controller = $array[0] . 'Controller';
+            $this->method = $array[1];
+            return true;
         }
         else
         {
-            return null;
+            return false;
         }
     }
 
     /** Separa os parâmetros da uri em um array. */
     public function checkParams()
     {
+        // remove a rota da uri.
+        $this->uri = preg_replace(REGEX_ROUTE,'',$this->uri);
+        // verifica se existem parâmetros.
         while(preg_match(REGEX_PARAMETERS,$this->uri,$match))
         {
             $params = explode('/',$match[0]);
             array_shift($params);
-            $this->paramethers[$params[0]] = $params[1];
+            $this->parameters[$params[0]] = $params[1];
             $this->uri = preg_replace(REGEX_PARAMETERS,'',$this->uri,1);
         }
     }

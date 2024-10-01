@@ -9,8 +9,5 @@
     <title>Document</title>
 </head>
 <body>
-    <header>header</header>
+    <header><?=$pageName?></header>
     <nav>nav</nav>
-    <main>
-        main
-    </main>
