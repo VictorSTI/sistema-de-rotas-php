@@ -9,6 +9,7 @@ class Router
     private $requestMethod;
     private $controller;
     private $method;
+    private $pageName;
     private $parameters = [];
     private $flag;
 
@@ -51,7 +52,11 @@ class Router
 
     /** Inicia a rota.
      * Verifica se a uri está em um padrão válido.
-     * Verifica se a uri contém parâmetros em um padrão válido. */
+     * Verifica se a uri contém parâmetros em um padrão válido.
+     * @var string $uri Endereço da página.
+     * @var bool $flag Utilizada para sinalizar se uma rota foi encontrada. True = Rota encontrada. False = Rota não encontrada.
+     * @var string REGEX_ROUTE Constante que corresponde ao padrão utilizado nas rotas: /minha/rota 
+     * @var array $match Armazena temporariamente a rota caso o preg_match encontre o padrão da regex. */
     public function startRoute()
     {
         switch($this->uri)
@@ -89,7 +94,10 @@ class Router
     }
 
     /** Verifica se a rota existe no array de rotas.
-     * Define controller e method. */
+     * @var string $controller Controller que será executado.
+     * @var string $method Método que será executando quando o controller for instanciado.
+     * @var string $pageName Nome da página que será carregada.
+     * @return bool Retorna true se a rota for encontrada no array de rotas, caso contrário retorna false. */
     public function checkRoute()
     {
         if(array_key_exists($this->route,ROUTES[$this->requestMethod]))
@@ -97,6 +105,7 @@ class Router
             $array = explode('@',ROUTES[$this->requestMethod][$this->route]);
             $this->controller = $array[0] . 'Controller';
             $this->method = $array[1];
+            $this->pageName = $array[2];
             return true;
         }
         else
@@ -105,7 +114,13 @@ class Router
         }
     }
 
-    /** Separa os parâmetros da uri em um array. */
+    /** Verifica se existem parâmetros na uri e os separa em um array. 
+     * @param string REGEX_ROUTE Regex para capturar rotas no padrão /minha/rota
+     * @param string REGEX_PARAMETERS Regex para capturar parâmetros na URI no padrão /nomeDoParametro/valorDoParametro
+     * @param array $params Array para armazenamento temporário dos parâmetros vindos via URI.
+     * @param array $parameters Array para armazenamento dos parâmetros vindos da URI.
+     * @return void Não retorna nenhum valor.
+    */
     public function checkParams()
     {
         // remove a rota da uri.

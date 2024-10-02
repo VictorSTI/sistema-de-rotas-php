@@ -3,11 +3,11 @@ define('ROUTES',
 [
     'GET' =>
     [
-        '/' => 'Home@viewHomePage',
-        '/usuario/home' => 'Usuario@usuarioHome'
+        '/' => 'Home@viewHomePage@Página Inicial',
+        '/usuario/home' => 'Usuario@usuarioHome@Página Inicial do Usuário'
     ],
     'POST' =>
     [
-        '/' => 'Home@viewHomePage'
+        '/' => 'Home@viewHomePage@Página Inicial'
     ]
 ]);

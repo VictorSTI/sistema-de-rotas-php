@@ -17,6 +17,9 @@ class BaseController
         return $this->parameters;
     }
 
+    /** Exibição das páginas.
+     * @param string $viewName Nome da view que será carregada (apenas o nome, sem o complemento 'View.php').
+     */
     protected function render($viewName)
     {
         if(!empty($this->parameters))
@@ -27,6 +30,5 @@ class BaseController
         require_once dirname(__DIR__) . '/views/headerView.php';
         require_once dirname(__DIR__) . '/views/' . $viewName . 'View.php';
         require_once dirname(__DIR__) . '/views/footerView.php';
-
     }
 }
