@@ -9,7 +9,6 @@ class Router
     private $requestMethod;
     private $controller;
     private $method;
-    private $pageName;
     private $parameters = [];
     private $flag;
 
@@ -105,7 +104,7 @@ class Router
             $array = explode('@',ROUTES[$this->requestMethod][$this->route]);
             $this->controller = $array[0] . 'Controller';
             $this->method = $array[1];
-            $this->pageName = $array[2];
+            $this->parameters['pageName'] = $array[2];
             return true;
         }
         else

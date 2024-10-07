@@ -2,9 +2,8 @@
 namespace app\controllers;
 class HomeController extends BaseController
 {
-    public function viewHomePage()
+    public function viewHomepage()
     {
-        $this->parameters['pageName'] = 'Página Inicial';
         $this->render('home');
     }
 }
